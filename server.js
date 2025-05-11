@@ -55,4 +55,3 @@ app.delete('/tema/:id/categorias/:categoriaId', (req, res) => {
     const categoriaId = req.params.categoriaId;
     res.json({ message:`Categoria com ID ${categoriaId} excluida` });
 });
-
