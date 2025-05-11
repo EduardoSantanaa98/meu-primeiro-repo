@@ -1,0 +1,24 @@
+{
+  "name": "meu-primeiro-repo",
+  "version": "1.0.0",
+  "description": "\"# Ol� GitHub!\"",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EduardoSantanaa98/meu-primeiro-repo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EduardoSantanaa98/meu-primeiro-repo/issues"
+  },
+  "homepage": "https://github.com/EduardoSantanaa98/meu-primeiro-repo#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
