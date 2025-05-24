@@ -1,46 +1,50 @@
 const express = require('express');
+const { sequelize, Task } = require('./models/Task');
 const app = express();
+
 app.use(express.json());
 
 const port = 3000;
 
-let tasks = [];
-let idCounter = 1;
-
-app.post('/task', (req, res) => {
-  const { title } = req.body;
-  const newTask = { id: idCounter++, title };
-  tasks.push(newTask);
-  res.status(201).json(newTask);
+sequelize.sync().then(() => {
+  console.log('Banco sincronizado');
 });
 
-app.get('/tasks', (req, res) => {
+app.post('/task', async (req, res) => {
+  try {
+    const task = await Task.create({ title: req.body.title });
+    res.status(201).json(task);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.get('/tasks', async (req, res) => {
+  const tasks = await Task.findAll();
   res.json(tasks);
 });
 
-app.get('/task/:id', (req, res) => {
-  const task = tasks.find(t => t.id == req.params.id);
-  if (task) {
-    res.json(task);
-  } else {
-    res.status(404).json({ message: 'Tarefa não encontrada' });
-  }
+app.get('/task/:id', async (req, res) => {
+  const task = await Task.findByPk(req.params.id);
+  if (task) res.json(task);
+  else res.status(404).json({ message: 'Tarefa não encontrada' });
 });
 
-app.put('/task/:id', (req, res) => {
-  const task = tasks.find(t => t.id == req.params.id);
+app.put('/task/:id', async (req, res) => {
+  const task = await Task.findByPk(req.params.id);
   if (task) {
     task.title = req.body.title;
+    await task.save();
     res.json(task);
   } else {
     res.status(404).json({ message: 'Tarefa não encontrada' });
   }
 });
 
-app.delete('/task/:id', (req, res) => {
-  const index = tasks.findIndex(t => t.id == req.params.id);
-  if (index !== -1) {
-    tasks.splice(index, 1);
+app.delete('/task/:id', async (req, res) => {
+  const task = await Task.findByPk(req.params.id);
+  if (task) {
+    await task.destroy();
     res.json({ message: 'Tarefa apagada com sucesso' });
   } else {
     res.status(404).json({ message: 'Tarefa não encontrada' });
